@@ -2,11 +2,17 @@ import GistProps from "./GistProps";
 
 interface GistListProps {
   items?: GistProps[];
+  text: string;
 }
 
-const GistList = ({ items }: GistListProps) => {
+const GistList = ({ items, text }: GistListProps) => {
   return (
-    <>{items && items.map(({ description }) => <div>{description}</div>)}</>
+    <>
+      {items &&
+        items
+          .filter((item) => item.description === text)
+          .map(({ description }) => <div>{description}</div>)}
+    </>
   );
 };
 

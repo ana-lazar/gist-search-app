@@ -1,11 +1,18 @@
-const SearchBar = () => {
+interface SearchBarProps {
+  text: string;
+  handleFilterTextChange: (value: string) => void;
+}
+
+const SearchBar = ({ text, handleFilterTextChange }: SearchBarProps) => {
   return (
-    <>
-      <div>
-        <input type="text" placeholder="username" />
-        <button>Search</button>
-      </div>
-    </>
+    <div>
+      <input
+        type="text"
+        placeholder="username"
+        onChange={(event) => handleFilterTextChange(event.target.value)}
+        value={text}
+      />
+    </div>
   );
 };
 
