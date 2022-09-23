@@ -11,7 +11,13 @@ const GistList = ({ gists, fetching, fetchingError }: GistListProps) => {
     <>
       {fetching && <div>Fetching...</div>}
       {fetchingError && <div>{fetchingError.message || "Fetching error"}</div>}
-      {gists && gists.map(({ id }) => <div key={id}>{id}</div>)}
+      {gists &&
+        gists.map(({ id, languages }) => (
+          <div key={id}>
+            {id}
+            {languages}
+          </div>
+        ))}
     </>
   );
 };
