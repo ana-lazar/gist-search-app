@@ -6,12 +6,12 @@ const StyledSearchBar = styled.div`
   justify-content: center;
   border-bottom: 1px solid black;
   padding: 10px;
-`
+`;
 
 const StyledName = styled.div`
   font-weight: bold;
   margin-right: 10px;
-`
+`;
 
 interface SearchBarProps {
   text: string;
@@ -22,7 +22,7 @@ const SearchBar = ({ text, onFilterTextChange }: SearchBarProps) => {
   return (
     <StyledSearchBar>
       <StyledName>Search by username:</StyledName>
-      <StyledInput
+      <input
         type="text"
         placeholder="username"
         onChange={(event) => onFilterTextChange(event.target.value)}
