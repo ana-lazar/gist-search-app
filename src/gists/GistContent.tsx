@@ -1,11 +1,13 @@
 import GistProps from "./GistProps";
 
-interface GistContentProps {}
+interface GistContentProps {
+  gist?: GistProps;
+}
 
-const GistContent = () => {
+const GistContent = ({ gist }: GistContentProps) => {
   return (
     <>
-      <div>Content</div>
+      <div>{gist?.files?.[0]?.filename}</div>
     </>
   );
 };

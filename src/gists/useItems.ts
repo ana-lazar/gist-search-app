@@ -1,6 +1,6 @@
 import { useCallback, useState, useEffect } from "react";
 import GistProps from "./GistProps";
-import { listGistsForUser } from "../core/api";
+import { getGistsByUser, getAvatarsByGist } from "../core/api";
 
 interface GistsState {
   gists?: GistProps[];
@@ -42,7 +42,6 @@ const useItems = () => {
       return;
     }
     let cancelled = false;
-    console.log("loadEffect");
 
     async function load() {
       if (fetching) {
@@ -50,8 +49,14 @@ const useItems = () => {
       }
       try {
         setState({ ...state, fetching: true, fetchingError: null });
-        const gists = await listGistsForUser(username);
-        // console.log(gists);
+        let gists = await getGistsByUser(username);
+        const avatars = await Promise.all(
+          gists.map((gist) => getAvatarsByGist(gist.id))
+        );
+        gists = gists.map((gist, index) => ({
+          ...gist,
+          avatarUrls: avatars[index],
+        }));
         if (cancelled) {
           return;
         }

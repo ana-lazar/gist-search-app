@@ -24,7 +24,9 @@ const FilterableGistList = () => {
         selectedId={selectedId}
         setSelectedId={setSelectedId}
       />
-      {selectedId && <GistContent />}
+      {selectedId && (
+        <GistContent gist={gists?.find((g) => g.id === selectedId)} />
+      )}
     </>
   );
 };
