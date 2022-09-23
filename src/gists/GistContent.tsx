@@ -9,7 +9,7 @@ const ContentWrapper = styled.div`
   border: 1px solid black;
   margin: 10px;
   width: 50%;
-`
+`;
 
 interface GistContentProps {
   gist?: GistProps;
@@ -23,7 +23,9 @@ const GistContent = ({ gist, loadGistContent }: GistContentProps) => {
 
   return (
     <ContentWrapper>
-      {gist?.files?.map(file => <GistFile key={file.url} file={file} />)}
+      {gist?.files?.map((file) => (
+        <GistFile key={file.url} file={file} />
+      ))}
     </ContentWrapper>
   );
 };

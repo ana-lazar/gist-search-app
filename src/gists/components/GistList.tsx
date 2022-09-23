@@ -7,11 +7,11 @@ const ListWrapper = styled.div`
   flex-direction: column;
   margin: 10px;
   width: 50%;
-`
+`;
 
 const FetchingWrapper = styled.div`
   align-self: center;
-`
+`;
 
 interface GistListProps {
   gists?: GistProps[] | null;
@@ -31,12 +31,23 @@ const GistList = ({
   return (
     <ListWrapper>
       {fetching && <FetchingWrapper>Fetching...</FetchingWrapper>}
-      {fetchingError && <FetchingWrapper>{fetchingError.message || "Fetching error"}</FetchingWrapper>}
+      {fetchingError && (
+        <FetchingWrapper>
+          {fetchingError.message || "Fetching error"}
+        </FetchingWrapper>
+      )}
       {gists &&
-        gists.map(gist => (
-          <GistItem key={gist.id} gist={gist} selectedId={selectedId} setSelectedId={setSelectedId} />
+        gists.map((gist) => (
+          <GistItem
+            key={gist.id}
+            gist={gist}
+            selectedId={selectedId}
+            setSelectedId={setSelectedId}
+          />
         ))}
-      {gists?.length === 0 && <FetchingWrapper>This user has no public gists</FetchingWrapper>}
+      {!fetchingError && gists?.length === 0 && (
+        <FetchingWrapper>This user has no public gists</FetchingWrapper>
+      )}
     </ListWrapper>
   );
 };

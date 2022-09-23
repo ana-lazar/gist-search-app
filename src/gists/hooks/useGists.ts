@@ -2,31 +2,18 @@ import { useCallback, useState, useEffect } from "react";
 import GistProps from "../types/GistProps";
 import { getGistsByUser, getAvatarsByGist } from "../service/api";
 
-interface GistsState {
-  gists?: GistProps[] | null;
-  fetching: boolean;
-  fetchingError?: Error | null;
-  pendingLoadGist?: GistProps | null;
-  username: string;
-}
-
-const initialState: GistsState = {
-  gists: null,
-  fetching: false,
-  fetchingError: null,
-  username: "",
-};
-
 const useItems = () => {
-  const [state, setState] = useState(initialState);
+  const [gists, setGists] = useState<GistProps[]>([]);
+  const [fetching, setFetching] = useState<boolean>(false);
+  const [fetchingError, setFetchingError] = useState<Error>();
+  const [username, setUsername] = useState<string>("");
   const [pendingLoadGist, setPendingLoadGist] = useState<GistProps>();
-  const { gists, fetching, fetchingError, username } = state;
 
   const onUsernameChange = useCallback(
     (newUsername: string) => {
-      setState({ ...state, username: newUsername });
+      setUsername(newUsername);
     },
-    [state, setState]
+    [setUsername]
   );
   const loadGistContent = useCallback(
     (gist?: GistProps) => {
@@ -35,8 +22,12 @@ const useItems = () => {
     [setPendingLoadGist]
   );
 
-  useEffect(loadEffect, [username]);
-  useEffect(loadGistContentEffect, [setState, pendingLoadGist, setPendingLoadGist]);
+  useEffect(loadEffect, [username, setFetching, setFetchingError, setGists]);
+  useEffect(loadGistContentEffect, [
+    pendingLoadGist,
+    setPendingLoadGist,
+    setGists,
+  ]);
 
   return {
     gists,
@@ -59,7 +50,8 @@ const useItems = () => {
         return;
       }
       try {
-        setState({ ...state, fetching: true, fetchingError: null });
+        setFetching(true);
+        setFetchingError(undefined);
         let gists = await getGistsByUser(username);
         const avatars = await Promise.all(
           gists.map((gist) => getAvatarsByGist(gist.id))
@@ -71,12 +63,14 @@ const useItems = () => {
         if (cancelled) {
           return;
         }
-        setState({ ...state, fetching: false, gists });
+        setFetching(false);
+        setGists(gists);
       } catch (fetchingError: any) {
         if (cancelled) {
           return;
         }
-        setState({ ...state, fetching: false, fetchingError });
+        setFetching(false);
+        setFetchingError(fetchingError);
       }
     }
     load();
@@ -94,16 +88,27 @@ const useItems = () => {
 
     async function load() {
       try {
-        const contents = await Promise.all(pendingLoadGist?.files.map(file => fetch(file.url).then(res => res.text())) as any);
-        const gists = state.gists?.map((gist) => ({
+        const contents = await Promise.all(
+          pendingLoadGist?.files.map((file) =>
+            fetch(file.url).then((res) => res.text())
+          ) as any
+        );
+        const newGists = gists?.map((gist) => ({
           ...gist,
-          ...(pendingLoadGist?.id === gist.id ? ({files: gist.files.map((file, index) => ({ ...file, content: contents[index]} ))}) : ({}))
+          ...(pendingLoadGist?.id === gist.id
+            ? {
+                files: gist.files.map((file, index) => ({
+                  ...file,
+                  content: contents[index],
+                })),
+              }
+            : {}),
         }));
         if (cancelled) {
           return;
         }
         setPendingLoadGist(undefined);
-        setState({ ...state, gists });
+        setGists(newGists as GistProps[]);
       } catch (fetchingError: any) {
         setPendingLoadGist(undefined);
         if (cancelled) {

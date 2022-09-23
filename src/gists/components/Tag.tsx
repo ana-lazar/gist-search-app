@@ -7,16 +7,14 @@ const StyledTag = styled.span`
   color: white;
   border: 1px solid black;
   border-radius: 10px;
-`
+`;
 
 interface TagProps {
   text: string;
 }
 
 const Tag = ({ text }: TagProps) => {
-  return (
-    <StyledTag>{text}</StyledTag>
-  );
+  return <StyledTag>{text}</StyledTag>;
 };
 
 export default Tag;

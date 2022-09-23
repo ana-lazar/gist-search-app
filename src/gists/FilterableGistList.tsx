@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import styled from "styled-components"
+import styled from "styled-components";
 import GistContent from "./GistContent";
 import GistList from "./components/GistList";
 import SearchBar from "./SearchBar";
@@ -41,7 +41,9 @@ const FilterableGistList = () => {
           selectedId={selectedId}
           setSelectedId={setSelectedId}
         />
-        {selectedId && <GistContent gist={gist} loadGistContent={loadGistContent} />}
+        {selectedId && (
+          <GistContent gist={gist} loadGistContent={loadGistContent} />
+        )}
       </GistListWrapper>
     </FilterableGistListWrapper>
   );

@@ -5,16 +5,14 @@ const StyledAvatar = styled.img`
   height: 24px;
   border-radius: 50%;
   margin: 0 5px 0 5px;
-`
+`;
 
 interface AvatarProps {
   url: string;
 }
 
 const Avatar = ({ url }: AvatarProps) => {
-  return (
-    <StyledAvatar src={url} alt="" />
-  );
+  return <StyledAvatar src={url} alt="" />;
 };
 
 export default Avatar;
