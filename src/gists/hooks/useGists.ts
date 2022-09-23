@@ -1,16 +1,16 @@
 import { useCallback, useState, useEffect } from "react";
-import GistProps from "./GistProps";
-import { getGistsByUser, getAvatarsByGist } from "../core/api";
+import GistProps from "../types/GistProps";
+import { getGistsByUser, getAvatarsByGist } from "../service/api";
 
 interface GistsState {
-  gists?: GistProps[];
+  gists?: GistProps[] | null;
   fetching: boolean;
   fetchingError?: Error | null;
   username: string;
 }
 
 const initialState: GistsState = {
-  gists: undefined,
+  gists: null,
   fetching: false,
   fetchingError: null,
   username: "",
@@ -18,23 +18,23 @@ const initialState: GistsState = {
 
 const useItems = () => {
   const [state, setState] = useState(initialState);
-  const { gists: items, fetching, fetchingError, username } = state;
+  const { gists, fetching, fetchingError, username } = state;
 
-  useEffect(loadEffect, [username]);
-
-  const onFilterUsernameChange = useCallback(
+  const onUsernameChange = useCallback(
     (newUsername: string) => {
       setState({ ...state, username: newUsername });
     },
     [username]
   );
 
+  useEffect(loadEffect, [username]);
+
   return {
-    gists: items,
+    gists,
     fetching,
     fetchingError,
-    username: username,
-    onFilterTextChange: onFilterUsernameChange,
+    username,
+    onUsernameChange,
   };
 
   function loadEffect() {
@@ -60,7 +60,7 @@ const useItems = () => {
         if (cancelled) {
           return;
         }
-        setState({ ...state, fetching: false, gists: gists });
+        setState({ ...state, fetching: false, gists });
       } catch (fetchingError: any) {
         console.log(fetchingError);
         if (cancelled) {

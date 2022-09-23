@@ -1,5 +1,6 @@
 import { Octokit } from "@octokit/core";
-import GistProps from "../gists/GistProps";
+import GistProps from "../types/GistProps";
+import { compareDesc } from "./utils";
 
 const octokit = new Octokit();
 
@@ -27,10 +28,9 @@ export const getGistsByUser: (
         id: gist.id,
         languages: Object.keys(languageMap),
         files,
-        avatarUrls: [],
       };
     });
-    
+
     return items;
   } catch (err) {
     throw err;
@@ -45,11 +45,7 @@ export const getAvatarsByGist: (id: string) => Promise<string[]> = async (
       gist_id: id,
     });
     return forks.data
-      .sort(
-        (a, b) =>
-          Number(new Date(a.created_at || "")) -
-          Number(new Date(b.created_at || ""))
-      )
+      .sort((a, b) => compareDesc(a.created_at, b.created_at))
       .slice(0, 3)
       .map((fork) => fork.owner?.avatar_url || "");
   } catch (err) {

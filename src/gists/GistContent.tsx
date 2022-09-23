@@ -1,4 +1,4 @@
-import GistProps from "./GistProps";
+import GistProps from "./types/GistProps";
 
 interface GistContentProps {
   gist?: GistProps;

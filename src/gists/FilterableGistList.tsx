@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 import GistContent from "./GistContent";
-import ListWrapper from "./GistList";
+import GistList from "./components/GistList";
 import SearchBar from "./SearchBar";
-import useItems from "./useItems";
+import useGists from "./hooks/useGists";
 
 const FilterableGistList = () => {
   const {
@@ -10,23 +10,25 @@ const FilterableGistList = () => {
     fetching,
     fetchingError,
     username,
-    onFilterTextChange,
-  } = useItems();
+    onUsernameChange,
+  } = useGists();
   const [selectedId, setSelectedId] = useState("");
+  const gist = useMemo(() => gists?.find((g) => g.id === selectedId), [
+    gists,
+    selectedId,
+  ]);
 
   return (
     <>
-      <SearchBar text={username} onFilterTextChange={onFilterTextChange} />
-      <ListWrapper
+      <SearchBar text={username} onFilterTextChange={onUsernameChange} />
+      <GistList
         gists={gists}
         fetching={fetching}
         fetchingError={fetchingError}
         selectedId={selectedId}
         setSelectedId={setSelectedId}
       />
-      {selectedId && (
-        <GistContent gist={gists?.find((g) => g.id === selectedId)} />
-      )}
+      {selectedId && <GistContent gist={gist} />}
     </>
   );
 };

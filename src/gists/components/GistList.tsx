@@ -1,7 +1,7 @@
-import GistProps from "./GistProps";
+import GistProps from "../types/GistProps";
 
 interface GistListProps {
-  gists?: GistProps[];
+  gists?: GistProps[] | null;
   fetching: boolean;
   fetchingError?: Error | null;
   selectedId?: string;
@@ -25,7 +25,7 @@ const GistList = ({
             {selectedId}
             {id}
             {languages}
-            {avatarUrls.length}
+            {avatarUrls?.length}
           </div>
         ))}
     </>
