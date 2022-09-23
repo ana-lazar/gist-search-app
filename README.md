@@ -3,6 +3,8 @@
 The project was created using Create React App.
 Please use the npm install script, followed by npm start.
 
+<img width="1344" alt="Screenshot 2022-09-23 at 22 33 09" src="https://user-images.githubusercontent.com/54860891/192054274-c8d1e594-976f-4fa5-9da9-c07783595115.png">
+
 ## Details
 
 Use the API provided by Github Gist API, to create a basic single-page application with any Web framework. The goal of this application is to allow its users to enter a username and get the full list of public Gists for that user.
