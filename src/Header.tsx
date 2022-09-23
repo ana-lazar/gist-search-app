@@ -1,6 +1,8 @@
-import React from "react";
+interface HeaderProps {
+  text: string;
+}
 
-const Header: React.FC<{ text: string }> = ({ text }) => {
+const Header = ({ text }: HeaderProps) => {
   return <div>{text}</div>;
 };
 
