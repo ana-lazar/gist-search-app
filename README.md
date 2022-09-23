@@ -3,6 +3,8 @@
 The project was created using Create React App.
 Please use the npm install script, followed by npm start.
 
+Lists gist id, languages tags and avatars (when the gist was previously forked), in addition to the file contents.
+
 <img width="1344" alt="Screenshot 2022-09-23 at 22 33 09" src="https://user-images.githubusercontent.com/54860891/192054274-c8d1e594-976f-4fa5-9da9-c07783595115.png">
 
 ## Details
