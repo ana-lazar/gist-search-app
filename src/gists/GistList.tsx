@@ -1,17 +1,17 @@
 import GistProps from "./GistProps";
 
 interface GistListProps {
-  items?: GistProps[];
-  text: string;
+  gists?: GistProps[];
+  fetching: boolean;
+  fetchingError?: Error | null;
 }
 
-const GistList = ({ items, text }: GistListProps) => {
+const GistList = ({ gists, fetching, fetchingError }: GistListProps) => {
   return (
     <>
-      {items &&
-        items
-          .filter((item) => item.description === text)
-          .map(({ description }) => <div>{description}</div>)}
+      {fetching && <div>Fetching...</div>}
+      {fetchingError && <div>{fetchingError.message || "Fetching error"}</div>}
+      {gists && gists.map(({ id }) => <div key={id}>{id}</div>)}
     </>
   );
 };

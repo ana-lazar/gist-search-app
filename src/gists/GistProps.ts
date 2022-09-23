@@ -1,3 +1,3 @@
 export default interface GistProps {
-  description: string;
+  id: string;
 }

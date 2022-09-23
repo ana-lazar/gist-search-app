@@ -4,12 +4,22 @@ import SearchBar from "./SearchBar";
 import useItems from "./useItems";
 
 const FilterableGistList = () => {
-  const { items, text, onFilterTextChange } = useItems();
+  const {
+    gists,
+    fetching,
+    fetchingError,
+    username,
+    onFilterTextChange,
+  } = useItems();
 
   return (
     <>
-      <SearchBar text={text} onFilterTextChange={onFilterTextChange} />
-      <ListWrapper items={items} text={text} />
+      <SearchBar text={username} onFilterTextChange={onFilterTextChange} />
+      <ListWrapper
+        gists={gists}
+        fetching={fetching}
+        fetchingError={fetchingError}
+      />
     </>
   );
 };

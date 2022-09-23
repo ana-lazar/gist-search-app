@@ -1,51 +1,68 @@
 import { useCallback, useState, useEffect } from "react";
 import GistProps from "./GistProps";
+import { listGistsForUser } from "../core/api";
 
 interface GistsState {
-  items?: GistProps[];
+  gists?: GistProps[];
   fetching: boolean;
   fetchingError?: Error | null;
-  text: string;
+  username: string;
 }
 
 const initialState: GistsState = {
-  items: undefined,
+  gists: undefined,
   fetching: false,
   fetchingError: null,
-  text: "",
+  username: "",
 };
 
 const useItems = () => {
   const [state, setState] = useState(initialState);
-  const { items, fetching, fetchingError, text } = state;
+  const { gists: items, fetching, fetchingError, username } = state;
 
-  useEffect(loadEffect, [text]);
+  useEffect(loadEffect, [username]);
 
-  const onFilterTextChange = useCallback(
-    (newText: string) => {
-      setState({ ...state, text: newText });
+  const onFilterUsernameChange = useCallback(
+    (newUsername: string) => {
+      setState({ ...state, username: newUsername });
     },
-    [text]
+    [username]
   );
 
   return {
-    items,
+    gists: items,
     fetching,
     fetchingError,
-    text,
-    onFilterTextChange,
+    username: username,
+    onFilterTextChange: onFilterUsernameChange,
   };
 
   function loadEffect() {
+    if (!username) {
+      return;
+    }
     let cancelled = false;
+    console.log("loadEffect");
 
     async function load() {
+      if (fetching) {
+        return;
+      }
       try {
-        const items = await getItems();
-        console.log("loadEffect");
-      } catch (fetchingError: any) {}
+        setState({ ...state, fetching: true, fetchingError: null });
+        const items = await listGistsForUser(username);
+        if (cancelled) {
+          return;
+        }
+        setState({ ...state, fetching: false, gists: items });
+      } catch (fetchingError: any) {
+        console.log(fetchingError);
+        if (cancelled) {
+          return;
+        }
+        setState({ ...state, fetching: false, fetchingError });
+      }
     }
-
     load();
 
     return () => {

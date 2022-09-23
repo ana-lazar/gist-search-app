@@ -7,7 +7,7 @@ interface GistRowProps {
 const GistRow = ({ item }: GistRowProps) => {
   return (
     <>
-      <div>{item.description}</div>
+      <div>{item.id}</div>
     </>
   );
 };
