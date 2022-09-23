@@ -1,25 +1,14 @@
-import React, { useCallback, useState } from "react";
+import React from "react";
 import ListWrapper from "./GistList";
-import GistProps from "./GistProps";
 import SearchBar from "./SearchBar";
+import useItems from "./useItems";
 
-interface FilterableListProps {
-  items?: GistProps[];
-}
-
-const FilterableGistList = ({ items }: FilterableListProps) => {
-  const [text, setText] = useState("");
-
-  const handleFilterTextChange = useCallback(
-    (newText: string) => {
-      setText(newText);
-    },
-    [text]
-  );
+const FilterableGistList = () => {
+  const { items, text, onFilterTextChange } = useItems();
 
   return (
     <>
-      <SearchBar text={text} handleFilterTextChange={handleFilterTextChange} />
+      <SearchBar text={text} onFilterTextChange={onFilterTextChange} />
       <ListWrapper items={items} text={text} />
     </>
   );
