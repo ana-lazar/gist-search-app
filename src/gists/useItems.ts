@@ -50,11 +50,12 @@ const useItems = () => {
       }
       try {
         setState({ ...state, fetching: true, fetchingError: null });
-        const items = await listGistsForUser(username);
+        const gists = await listGistsForUser(username);
+        // console.log(gists);
         if (cancelled) {
           return;
         }
-        setState({ ...state, fetching: false, gists: items });
+        setState({ ...state, fetching: false, gists: gists });
       } catch (fetchingError: any) {
         console.log(fetchingError);
         if (cancelled) {

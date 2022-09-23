@@ -1,4 +1,5 @@
-import React from "react";
+import React, { useState } from "react";
+import GistContent from "./GistContent";
 import ListWrapper from "./GistList";
 import SearchBar from "./SearchBar";
 import useItems from "./useItems";
@@ -11,6 +12,7 @@ const FilterableGistList = () => {
     username,
     onFilterTextChange,
   } = useItems();
+  const [selectedId, setSelectedId] = useState("");
 
   return (
     <>
@@ -19,7 +21,10 @@ const FilterableGistList = () => {
         gists={gists}
         fetching={fetching}
         fetchingError={fetchingError}
+        selectedId={selectedId}
+        setSelectedId={setSelectedId}
       />
+      {selectedId && <GistContent />}
     </>
   );
 };
