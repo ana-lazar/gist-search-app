@@ -1,4 +1,17 @@
+import styled from "styled-components";
 import GistProps from "../types/GistProps";
+import GistItem from "./GistItem";
+
+const ListWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  width: 50%;
+`
+
+const FetchingWrapper = styled.div`
+  align-self: center;
+`
 
 interface GistListProps {
   gists?: GistProps[] | null;
@@ -16,19 +29,15 @@ const GistList = ({
   setSelectedId,
 }: GistListProps) => {
   return (
-    <>
-      {fetching && <div>Fetching...</div>}
-      {fetchingError && <div>{fetchingError.message || "Fetching error"}</div>}
+    <ListWrapper>
+      {fetching && <FetchingWrapper>Fetching...</FetchingWrapper>}
+      {fetchingError && <FetchingWrapper>{fetchingError.message || "Fetching error"}</FetchingWrapper>}
       {gists &&
-        gists.map(({ id, languages, avatarUrls }) => (
-          <div key={id} onClick={() => setSelectedId(id)}>
-            {selectedId}
-            {id}
-            {languages}
-            {avatarUrls?.length}
-          </div>
+        gists.map(gist => (
+          <GistItem key={gist.id} gist={gist} selectedId={selectedId} setSelectedId={setSelectedId} />
         ))}
-    </>
+      {gists?.length === 0 && <FetchingWrapper>This user has no public gists</FetchingWrapper>}
+    </ListWrapper>
   );
 };
 

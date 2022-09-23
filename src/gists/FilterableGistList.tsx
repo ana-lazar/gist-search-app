@@ -1,8 +1,19 @@
-import React, { useMemo, useState } from "react";
+import { useMemo, useState } from "react";
+import styled from "styled-components"
 import GistContent from "./GistContent";
 import GistList from "./components/GistList";
 import SearchBar from "./SearchBar";
 import useGists from "./hooks/useGists";
+
+const GistListWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 10px;
+`;
+
+const FilterableGistListWrapper = styled.div`
+  margin: 20px;
+`;
 
 const FilterableGistList = () => {
   const {
@@ -11,6 +22,7 @@ const FilterableGistList = () => {
     fetchingError,
     username,
     onUsernameChange,
+    loadGistContent,
   } = useGists();
   const [selectedId, setSelectedId] = useState("");
   const gist = useMemo(() => gists?.find((g) => g.id === selectedId), [
@@ -19,17 +31,19 @@ const FilterableGistList = () => {
   ]);
 
   return (
-    <>
+    <FilterableGistListWrapper>
       <SearchBar text={username} onFilterTextChange={onUsernameChange} />
-      <GistList
-        gists={gists}
-        fetching={fetching}
-        fetchingError={fetchingError}
-        selectedId={selectedId}
-        setSelectedId={setSelectedId}
-      />
-      {selectedId && <GistContent gist={gist} />}
-    </>
+      <GistListWrapper>
+        <GistList
+          gists={gists}
+          fetching={fetching}
+          fetchingError={fetchingError}
+          selectedId={selectedId}
+          setSelectedId={setSelectedId}
+        />
+        {selectedId && <GistContent gist={gist} loadGistContent={loadGistContent} />}
+      </GistListWrapper>
+    </FilterableGistListWrapper>
   );
 };
 

@@ -3,8 +3,9 @@ import styled from "styled-components";
 export const StyledHeader = styled.h1`
   font-size: 1.5em;
   text-align: center;
-  color: black;
-  border-bottom: 2px solid black;
+  background-color: black;
+  color: white;
+  border-bottom: 1px solid black;
   padding: 30px;
   margin: 0px;
 `;

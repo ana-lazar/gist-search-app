@@ -6,6 +6,7 @@ interface GistsState {
   gists?: GistProps[] | null;
   fetching: boolean;
   fetchingError?: Error | null;
+  pendingLoadGist?: GistProps | null;
   username: string;
 }
 
@@ -18,23 +19,33 @@ const initialState: GistsState = {
 
 const useItems = () => {
   const [state, setState] = useState(initialState);
+  const [pendingLoadGist, setPendingLoadGist] = useState<GistProps>();
   const { gists, fetching, fetchingError, username } = state;
 
   const onUsernameChange = useCallback(
     (newUsername: string) => {
       setState({ ...state, username: newUsername });
     },
-    [username]
+    [state, setState]
+  );
+  const loadGistContent = useCallback(
+    (gist?: GistProps) => {
+      setPendingLoadGist(gist);
+    },
+    [setPendingLoadGist]
   );
 
   useEffect(loadEffect, [username]);
+  useEffect(loadGistContentEffect, [setState, pendingLoadGist, setPendingLoadGist]);
 
   return {
     gists,
     fetching,
     fetchingError,
     username,
+    pendingLoadGist,
     onUsernameChange,
+    loadGistContent,
   };
 
   function loadEffect() {
@@ -62,11 +73,42 @@ const useItems = () => {
         }
         setState({ ...state, fetching: false, gists });
       } catch (fetchingError: any) {
-        console.log(fetchingError);
         if (cancelled) {
           return;
         }
         setState({ ...state, fetching: false, fetchingError });
+      }
+    }
+    load();
+
+    return () => {
+      cancelled = true;
+    };
+  }
+
+  function loadGistContentEffect() {
+    if (!pendingLoadGist) {
+      return;
+    }
+    let cancelled = false;
+
+    async function load() {
+      try {
+        const contents = await Promise.all(pendingLoadGist?.files.map(file => fetch(file.url).then(res => res.text())) as any);
+        const gists = state.gists?.map((gist) => ({
+          ...gist,
+          ...(pendingLoadGist?.id === gist.id ? ({files: gist.files.map((file, index) => ({ ...file, content: contents[index]} ))}) : ({}))
+        }));
+        if (cancelled) {
+          return;
+        }
+        setPendingLoadGist(undefined);
+        setState({ ...state, gists });
+      } catch (fetchingError: any) {
+        setPendingLoadGist(undefined);
+        if (cancelled) {
+          return;
+        }
       }
     }
     load();
